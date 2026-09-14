@@ -11,16 +11,18 @@
   <meta property="og:description" content="AI/ML Engineer building agentic AI, high-concurrency backends, computer vision and production ML systems.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pinkaofc.github.io/">
-  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka.jpg">
+  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka-og.jpg">
   <meta name="twitter:card" content="summary">
   <title>Priyanka Kumari | AI/ML Engineer</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0a0a0c">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="scroll-progress" aria-hidden="true"></div>
   <div class="cursor-glow" aria-hidden="true"></div>
   <a class="skip-link" href="#work">Skip to content</a>
 
@@ -41,17 +43,19 @@
   <main id="top">
     <section class="hero container">
       <div class="hero-copy reveal">
-        <p class="eyebrow"><span class="status-dot"></span> AI / ML ENGINEER</p>
-        <h1>Turning AI ideas into <em>useful systems.</em></h1>
-        <p class="hero-text">I build production AI systems — agentic pipelines, RAG, LLM applications — alongside the backend engineering that makes them hold up under real traffic. Generative AI, NLP and computer vision, shipped as products rather than notebooks.</p>
+        <p class="eyebrow"><span class="status-dot"></span> Priyanka Kumari — AI / ML Engineer</p>
+        <h1>AI systems that hold up in <em>production.</em></h1>
+        <p class="hero-text">I build agentic pipelines, RAG systems and the backend engineering that keeps them correct under real traffic — from a research agent that cites all 13 of its sources to a booking API that has never sold the same ticket twice.</p>
+        <p class="hero-text hero-sub">Every project below ships with a <strong>build log</strong>: the decisions, the trade-offs, and why each one was made.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#work">Explore my work <span>↓</span></a>
-          <a class="button secondary" href="https://github.com/pinkaofc" target="_blank" rel="noreferrer">View GitHub ↗</a>
+          <a class="button primary" href="#work">Read the build logs <span>↓</span></a>
+          <a class="button secondary" href="https://github.com/pinkaofc" target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
         <div class="quick-links">
           <a href="https://www.linkedin.com/in/priyanka-kumari-533172245/" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href="https://www.hackerrank.com/profile/itspriyanka1230" target="_blank" rel="noreferrer">HackerRank</a>
           <a href="https://leetcode.com/u/pinkaofc/" target="_blank" rel="noreferrer">LeetCode</a>
+          <a href="https://www.hackerrank.com/profile/itspriyanka1230" target="_blank" rel="noreferrer">HackerRank</a>
+          <a href="#contact">Get in touch</a>
         </div>
       </div>
 
@@ -62,11 +66,11 @@
         <div class="terminal-card">
           <div class="terminal-top"><span></span><span></span><span></span><small>priyanka.ai</small></div>
           <div class="terminal-body">
-            <p><b>01</b> model = build_intelligence()</p>
-            <p><b>02</b> system = make_it_useful(model)</p>
-            <p><b>03</b> <span class="accent">ship(system)</span></p>
+            <p><b>01</b> agent = Pipeline(sources=13)</p>
+            <p><b>02</b> report = agent.research(topic)</p>
+            <p><b>03</b> <span class="accent">assert report.every_claim_cited</span></p>
             <div class="signal"><span></span><span></span><span></span><span></span><span></span></div>
-            <p class="muted">// learn → build → deploy → improve</p>
+            <p class="muted">// plan → research → verify → ship</p>
           </div>
         </div>
       </div>
@@ -89,6 +93,16 @@
         <article class="project featured reveal">
           <div class="project-number">01</div>
           <div>
+            <div class="preview" aria-hidden="true">
+              <div class="preview-head"><span class="pv-dot"></span>RESEARCH-AGENT · PIPELINE</div>
+              <div class="preview-body">
+                <p><span class="pv-cmd">&gt;</span> agent.research(<span class="pv-str">"Quantum Computing in Healthcare"</span>)</p>
+                <p><span class="pv-arrow">&#8627;</span> <span class="pv-key">planner</span> 8 stages queued</p>
+                <p><span class="pv-arrow">&#8627;</span> <span class="pv-key">sources</span> arXiv 200 &middot; PubMed 200 &middot; OpenAlex 200 <span class="pv-dim">(13 adapters)</span></p>
+                <p><span class="pv-arrow">&#8627;</span> <span class="pv-key">fact-check</span> 1 conflict resolved &rarr; confidence <span class="pv-ok">0.91</span></p>
+                <p class="pv-done"><span class="pv-ok">&#10003;</span> report.pdf &middot; every paragraph cited</p>
+              </div>
+            </div>
             <p class="tag">GENAI · AGENTS · RESEARCH</p>
             <h3>AI Research Agent</h3>
             <p>An agentic pipeline that researches any topic across 13 verified sources, cross-checks every claim, scores confidence and writes a fully-cited report — then voices it as a podcast.</p>
@@ -104,6 +118,15 @@
 
         <article class="project reveal">
           <div class="project-number">02</div>
+          <div class="preview" aria-hidden="true">
+            <div class="preview-head"><span class="pv-dot"></span>FLASH-SALE · 500 WORKERS</div>
+            <div class="preview-body">
+              <p><span class="pv-cmd">&gt;</span> locust -u 500 -r 100</p>
+              <p><span class="pv-arrow">&#8627;</span> <span class="pv-key">redis</span> sold-out rejected in <span class="pv-ok">&lt;5ms</span></p>
+              <p><span class="pv-arrow">&#8627;</span> <span class="pv-key">postgres</span> SELECT &hellip; FOR UPDATE</p>
+              <p class="pv-done"><span class="pv-ok">&#10003;</span> 100 sold &middot; <span class="pv-ok">0</span> oversold &middot; <span class="pv-ok">0</span> crashes</p>
+            </div>
+          </div>
           <p class="tag">BACKEND · CONCURRENCY</p>
           <h3>Ticket Booking System</h3>
           <p>A flash-sale booking API built to survive hundreds of buyers hitting the last ticket at once — double-booking ruled out by row-level locking, not by hopeful timing.</p>
@@ -118,6 +141,15 @@
 
         <article class="project reveal">
           <div class="project-number">03</div>
+          <div class="preview" aria-hidden="true">
+            <div class="preview-head"><span class="pv-dot live"></span>GESTURESENSE · LIVE FEED</div>
+            <div class="preview-body">
+              <p><span class="pv-key">hand</span> &#9996; peace sign <span class="pv-dim">&middot; 2 hands tracked</span></p>
+              <p><span class="pv-key">fingers</span> 2 <span class="pv-dim">/ 10</span></p>
+              <p><span class="pv-key">emotion</span> happy <span class="pv-ok">0.87</span></p>
+              <p class="pv-done"><span class="pv-dim">stabiliser on &middot; 1&euro; filter &middot; threaded capture</span></p>
+            </div>
+          </div>
           <p class="tag">COMPUTER VISION · REAL-TIME</p>
           <h3>EmotionGesture AI</h3>
           <p>Eight hand gestures, finger counting across two hands and seven-class emotion detection from one webcam feed — threaded capture and temporal smoothing keep it flicker-free.</p>
@@ -132,6 +164,14 @@
 
         <article class="project reveal">
           <div class="project-number">04</div>
+          <div class="preview" aria-hidden="true">
+            <div class="preview-head"><span class="pv-dot"></span>CORRECTION · TEXTBLOB + TRANSFORMER</div>
+            <div class="preview-body">
+              <p><span class="pv-key">in</span> <span class="pv-bad">He dont has no idea how many informations was missing.</span></p>
+              <p><span class="pv-key">out</span> <span class="pv-ok">He doesn't have any idea how much information was missing.</span></p>
+              <p class="pv-done"><span class="pv-dim">4 errors &middot; agreement, double negative, countability, tense</span></p>
+            </div>
+          </div>
           <p class="tag">NLP · DEPLOYMENT</p>
           <h3>Grammar &amp; Spell Checker</h3>
           <p>Transformer models handle grammar, TextBlob handles spelling, and Docker removes the environment problem — <code>docker run</code> is the whole install procedure.</p>
@@ -146,11 +186,19 @@
 
         <article class="project reveal">
           <div class="project-number">05</div>
+          <div class="preview" aria-hidden="true">
+            <div class="preview-head"><span class="pv-dot"></span>CLASSIFIER · TF-IDF</div>
+            <div class="preview-body">
+              <p><span class="pv-cmd">&gt;</span> resume.pdf</p>
+              <p><span class="pv-arrow">&#8627;</span> clean &rarr; tokenise &rarr; tfidf.pkl &rarr; clf.pkl</p>
+              <p class="pv-done"><span class="pv-ok">&#10003;</span> predicted: <span class="pv-ok">Data Science</span> <span class="pv-dim">&middot; 98% test accuracy</span></p>
+            </div>
+          </div>
           <p class="tag">MACHINE LEARNING · NLP</p>
           <h3>Resume Screening App</h3>
           <p>An end-to-end classifier taken from notebook to browser: cleaned text, TF-IDF features, 98% test accuracy, shipped as a Streamlit app that reads PDFs.</p>
           <ul class="metrics"><li><b>98%</b> test accuracy</li><li><b>PDF</b> + TXT upload</li></ul>
-          <div class="chips"><span>scikit-learn</span><span>TF-IDF</span><span>NLTK</span><span>Streamlit</span></div>
+          <div class="chips"><span>scikit-learn</span><span>KNN</span><span>TF-IDF</span><span>Streamlit</span></div>
           <div class="project-links">
             <a class="link-primary" href="project/resume-screening-app.html">Build Log →</a>
             <a href="project/resume-screening-app.html#walkthrough">Walkthrough</a>
@@ -160,6 +208,15 @@
 
         <article class="project reveal">
           <div class="project-number">06</div>
+          <div class="preview" aria-hidden="true">
+            <div class="preview-head"><span class="pv-dot"></span>COSINE SIMILARITY · ~5,000 TITLES</div>
+            <div class="preview-body">
+              <p><span class="pv-cmd">&gt;</span> recommend(<span class="pv-str">"Inception"</span>)</p>
+              <p><span class="pv-arrow">&#8627;</span> Interstellar <span class="pv-ok">0.42</span></p>
+              <p><span class="pv-arrow">&#8627;</span> The Prestige <span class="pv-ok">0.39</span></p>
+              <p class="pv-done"><span class="pv-dim">lookup from precomputed similarity.pkl</span></p>
+            </div>
+          </div>
           <p class="tag">RECOMMENDATION · ML</p>
           <h3>Movie Recommendation System</h3>
           <p>A content-based recommender over ~5,000 TMDB titles. The similarity matrix is precomputed, so a recommendation is a lookup rather than a calculation.</p>
@@ -208,7 +265,7 @@
           <p class="eyebrow">03 — ABOUT</p>
           <h2>More than models. <em>I build systems.</em></h2>
           <figure class="portrait reveal">
-            <img src="assets/priyanka.jpg" alt="Priyanka Kumari, AI/ML Engineer" width="413" height="531" loading="lazy" decoding="async">
+            <img src="assets/priyanka.png" alt="Priyanka Kumari, AI/ML Engineer" width="413" height="531" loading="lazy" decoding="async">
             <figcaption>Priyanka Kumari · AI/ML Engineer</figcaption>
           </figure>
         </div>
@@ -272,7 +329,7 @@
     "name": "Priyanka Kumari",
     "jobTitle": "AI/ML Engineer",
     "url": "https://pinkaofc.github.io/",
-    "image": "https://pinkaofc.github.io/assets/priyanka.jpg",
+    "image": "https://pinkaofc.github.io/assets/priyanka-og.jpg",
     "sameAs": [
       "https://github.com/pinkaofc",
       "https://www.linkedin.com/in/priyanka-kumari-533172245/",

@@ -22,3 +22,14 @@ window.addEventListener("pointermove", (e) => {
   glow.style.top = e.clientY + "px";
 });
 document.getElementById("year").textContent = new Date().getFullYear();
+
+const bar = document.querySelector(".scroll-progress");
+if (bar) {
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
+  };
+  addEventListener("scroll", update, {passive: true});
+  addEventListener("resize", update);
+  update();
+}

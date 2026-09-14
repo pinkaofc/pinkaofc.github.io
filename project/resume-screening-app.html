@@ -16,7 +16,7 @@
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../case.css">
 </head>
@@ -48,7 +48,7 @@
         <p class="case-lede">An end-to-end resume classifier — trained to 98% test accuracy in a notebook, then shipped as a Streamlit app that reads PDFs and returns a job category instantly.</p>
         <dl class="case-meta">
           <div><dt>Role</dt><dd>End-to-end ML workflow</dd></div>
-          <div><dt>Modelling</dt><dd>Jupyter · scikit-learn</dd></div>
+          <div><dt>Modelling</dt><dd>Jupyter · scikit-learn (KNN)</dd></div>
           <div><dt>Features</dt><dd>TF-IDF over cleaned text</dd></div>
           <div><dt>Interface</dt><dd>Streamlit</dd></div>
         </dl>
@@ -112,7 +112,7 @@
               </li>
               <li>
                 <h3>Trained in a notebook, evaluated properly</h3>
-                <p>Model development happened in Jupyter, reaching 98% accuracy on held-out test data across categories including Data Science, Java Developer, HR, Python Developer and Mechanical Engineer.</p>
+                <p>Model development happened in Jupyter, reaching 98% accuracy on held-out test data across 25 categories including Data Science, Java Developer, HR, Python Developer and Mechanical Engineer. The shipped classifier is a <code>KNeighborsClassifier</code> over the TF-IDF vectors &mdash; a sensible fit here, since résumés in the same job family cluster tightly in that feature space and the model needs no retraining to absorb a new example.</p>
               </li>
               <li>
                 <h3>Vectoriser pickled alongside the model</h3>
@@ -134,6 +134,10 @@
             <p class="case-side-note">Running it end to end.</p>
           </div>
           <div class="case-body">
+            <div class="case-live">
+              <span class="dot-idle">&#9675; Not deployed</span>
+              <span>Target: <b>Streamlit Community Cloud</b> &mdash; ready to deploy. Until then, the steps below run it locally.</span>
+            </div>
             <ol class="walk">
               <li>
                 <h3>Install</h3>
