@@ -66,6 +66,4 @@ Project write-ups live directly in the `project/*.html` files. Each one is self-
 copy an existing page as the template when adding a seventh project, and remember to add
 the new URL to `sitemap.xml` and a card to the project grid in `index.html`.
 
-## Still to add
 
-- `assets/resume.pdf` — no resume link is shown on the site until this exists.
