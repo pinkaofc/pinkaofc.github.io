@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A flash-sale booking API built to survive hundreds of buyers hitting the last ticket in the same millisecond — with double-booking ruled out at the database level rather than hoped">
+  <meta name="author" content="Priyanka Kumari">
+  <link rel="canonical" href="https://pinkaofc.github.io/project/ticket-booking-system.html">
+  <meta property="og:title" content="Ticket Booking System — Build log | Priyanka Kumari">
+  <meta property="og:description" content="A flash-sale booking API built to survive hundreds of buyers hitting the last ticket in the same millisecond — with double-booking ruled out at the database level rather than hoped">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pinkaofc.github.io/project/ticket-booking-system.html">
+  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka.jpg">
+  <meta name="twitter:card" content="summary">
+  <title>Ticket Booking System — Build log | Priyanka Kumari</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../case.css">
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <a class="skip-link" href="#case-main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="../index.html#top" aria-label="Priyanka Kumari home"><span>P</span>riyanka.</a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+      <div class="nav-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/pinkaofc/Ticket-Booking-System" target="_blank" rel="noreferrer">Repo &#8599;</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="case-main">
+    <article>
+      <section class="case-hero container">
+        <a class="back-link" href="../index.html#work">&#8592; All work</a>
+        <p class="eyebrow">02 &middot; BACKEND · CONCURRENCY · SYSTEM DESIGN</p>
+        <h1>Ticket Booking System</h1>
+        <p class="case-codename">Repository codename &middot; <b>High-Concurrency Flash Sale Engine</b></p>
+        <p class="case-lede">A flash-sale booking API built to survive hundreds of buyers hitting the last ticket in the same millisecond — with double-booking ruled out at the database level rather than hoped away in application code.</p>
+        <dl class="case-meta">
+          <div><dt>Role</dt><dd>System design + implementation</dd></div>
+          <div><dt>Core stack</dt><dd>FastAPI · PostgreSQL · Redis</dd></div>
+          <div><dt>Load testing</dt><dd>Locust, 500 concurrent users</dd></div>
+          <div><dt>Infrastructure</dt><dd>Docker Compose</dd></div>
+        </dl>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/pinkaofc/Ticket-Booking-System" target="_blank" rel="noreferrer">View repository &#8599;</a>
+          <a class="button secondary" href="#walkthrough">Jump to walkthrough &#8595;</a>
+          <a class="button secondary" href="https://www.linkedin.com/feed/update/urn:li:activity:7490798860915593216/" target="_blank" rel="noreferrer">Read the write-up on LinkedIn &#8599;</a>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="case-stats reveal">
+          <div><strong>500</strong><span>concurrent users simulated</span></div>
+          <div><strong>100</strong><span>tickets, each sold exactly once</span></div>
+          <div><strong>0</strong><span>oversells or DB crashes</span></div>
+          <div><strong>2</strong><span>layers of defence</span></div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">01 &mdash; THE PROBLEM</p></div>
+          <div class="case-body">
+            <p>A flash sale breaks a normal CRUD application in two distinct ways, and they need two distinct fixes.</p>
+            <p><strong>The database CPU crash.</strong> Ten thousand users refreshing a page all ask the same question — how many tickets are left? Answering it from Postgres every single time is what actually takes the system down, and most of those requests are for an event that has already sold out.</p>
+            <p><strong>The double-booking race.</strong> If a hundred users press <em>Buy</em> on the final ticket at the same instant, a standard read-then-write application sells that ticket a hundred times. One customer is served and ninety-nine are owed an apology.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">02 &mdash; ARCHITECTURE</p></div>
+          <div class="case-body">
+            <div class="diagram-wrap"><pre class="diagram">Request → [ Redis availability check ] → reject in ms if sold out
+                    ↓ passes
+         [ Postgres SELECT ... FOR UPDATE ] → row locked atomically
+                    ↓
+            decrement → commit → booking confirmed</pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="build-log" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">03 &mdash; BUILD LOG</p>
+            <p class="case-side-note">The decisions that shaped the system, and why each one was made.</p>
+          </div>
+          <div class="case-body">
+            <ol class="log">
+              <li>
+                <h3>Layer one — Redis as the traffic shield</h3>
+                <p>Live availability is held in Redis. An incoming request checks the cache first, and a request for a sold-out event is rejected in milliseconds without Postgres ever being consulted. This is what keeps the primary database alive under a spike — it never sees the overwhelming majority of doomed traffic.</p>
+              </li>
+              <li>
+                <h3>Layer two — pessimistic row-level locking</h3>
+                <p>The cache protects availability; it cannot protect correctness. Checkout therefore runs <code>SELECT ... FOR UPDATE</code> inside the transaction. The specific event row is locked atomically, overlapping transactions queue behind it and resolve sequentially at microsecond scale — which makes zero double-bookings a property of the schema rather than a hope about timing.</p>
+              </li>
+              <li>
+                <h3>Pessimistic over optimistic, deliberately</h3>
+                <p>Optimistic locking retries on conflict. Under a flash sale, conflict <em>is</em> the steady state, so optimistic retries turn into a thundering herd. Pessimistic locking queues the contention instead of amplifying it — the right trade when writes to a single row are the entire workload.</p>
+              </li>
+              <li>
+                <h3>Async the whole way down</h3>
+                <p>FastAPI with <code>asyncpg</code>, so a request waiting on the database frees its worker instead of blocking it. Holding thousands of open connections is the baseline requirement here, not an optimisation.</p>
+              </li>
+              <li>
+                <h3>Postgres chosen for ACID, not familiarity</h3>
+                <p>The entire correctness argument rests on transactional guarantees. A datastore with relaxed consistency would have relocated the race condition rather than removed it.</p>
+              </li>
+              <li>
+                <h3>Proved with load, not assertions</h3>
+                <p>A Locust scenario spins up 500 concurrent workers against the running API. The claim being made is that inventory never goes negative and never oversells — so the test harness exists specifically to try to break that. Under the full spike the system sold exactly 100 tickets: zero oversells, zero database crashes, and no dropped connections.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="walkthrough" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">04 &mdash; WALKTHROUGH</p>
+            <p class="case-side-note">Running it end to end.</p>
+          </div>
+          <div class="case-body">
+            <ol class="walk">
+              <li>
+                <h3>Start the infrastructure</h3>
+                <p>Postgres and Redis come up as containers.</p>
+                <pre class="code"><code>docker-compose up -d</code></pre>
+              </li>
+              <li>
+                <h3>Run the API</h3>
+                <p>The schema initialises automatically on startup.</p>
+                <pre class="code"><code>python -m venv venv
+source venv/bin/activate      # Windows: .\venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn main:app --host 127.0.0.1 --port 8000</code></pre>
+              </li>
+              <li>
+                <h3>Watch it live</h3>
+                <p>The bundled UI at the root URL shows ticket sales updating in real time as the load test runs — the most direct way to watch both layers doing their jobs.</p>
+                <pre class="code"><code>http://127.0.0.1:8000/</code></pre>
+              </li>
+              <li>
+                <h3>Simulate the flash sale</h3>
+                <p>500 users, ramping at 100 per second, for ten seconds.</p>
+                <pre class="code"><code>locust -f load_test.py --headless -u 500 -r 100 \
+       --run-time 10s --host http://127.0.0.1:8000</code></pre>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">05 &mdash; STACK</p></div>
+          <div class="case-body">
+            <div class="chips big"><span>Python</span><span>FastAPI</span><span>PostgreSQL</span><span>Redis</span><span>asyncpg</span><span>Locust</span><span>Docker</span><span>Docker Compose</span></div>
+            <a class="button primary case-repo-cta" href="https://github.com/pinkaofc/Ticket-Booking-System" target="_blank" rel="noreferrer">Read the source on GitHub &#8599;</a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="case-pager container" aria-label="Project navigation">
+        <a class="pager-link prev" href="ai-research-agent.html"><span class="pager-dir">&#8592; Previous project</span><span class="pager-title">AI Research Agent</span></a>
+        <a class="pager-link next" href="emotiongesture-ai.html"><span class="pager-dir">Next project &#8594;</span><span class="pager-title">EmotionGesture AI</span></a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> Priyanka Kumari.</span>
+      <span>AI / ML Engineer &middot; <a href="../index.html#work">Back to all work</a></span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

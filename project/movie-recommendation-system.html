@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A content-based recommender built over roughly five thousand TMDB titles, precomputed so that a recommendation is a lookup rather than a calculation — and deployed publicly on Stre">
+  <meta name="author" content="Priyanka Kumari">
+  <link rel="canonical" href="https://pinkaofc.github.io/project/movie-recommendation-system.html">
+  <meta property="og:title" content="Movie Recommendation System — Build log | Priyanka Kumari">
+  <meta property="og:description" content="A content-based recommender built over roughly five thousand TMDB titles, precomputed so that a recommendation is a lookup rather than a calculation — and deployed publicly on Stre">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pinkaofc.github.io/project/movie-recommendation-system.html">
+  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka.jpg">
+  <meta name="twitter:card" content="summary">
+  <title>Movie Recommendation System — Build log | Priyanka Kumari</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../case.css">
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <a class="skip-link" href="#case-main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="../index.html#top" aria-label="Priyanka Kumari home"><span>P</span>riyanka.</a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+      <div class="nav-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/pinkaofc/movie-recommendation-system" target="_blank" rel="noreferrer">Repo &#8599;</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="case-main">
+    <article>
+      <section class="case-hero container">
+        <a class="back-link" href="../index.html#work">&#8592; All work</a>
+        <p class="eyebrow">06 &middot; RECOMMENDATION · ML</p>
+        <h1>Movie Recommendation System</h1>
+        <p class="case-codename">Repository codename &middot; <b>Content-Based Recommender</b></p>
+        <p class="case-lede">A content-based recommender built over roughly five thousand TMDB titles, precomputed so that a recommendation is a lookup rather than a calculation — and deployed publicly on Streamlit Community Cloud.</p>
+        <dl class="case-meta">
+          <div><dt>Role</dt><dd>Data work + deployment</dd></div>
+          <div><dt>Method</dt><dd>Cosine similarity on feature vectors</dd></div>
+          <div><dt>Data</dt><dd>TMDB 5000, two datasets merged</dd></div>
+          <div><dt>Deployment</dt><dd>Streamlit Community Cloud</dd></div>
+        </dl>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/pinkaofc/movie-recommendation-system" target="_blank" rel="noreferrer">View repository &#8599;</a>
+          <a class="button secondary" href="#walkthrough">Jump to walkthrough &#8595;</a>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="case-stats reveal">
+          <div><strong>~5,000</strong><span>movies indexed</span></div>
+          <div><strong>2</strong><span>datasets merged</span></div>
+          <div><strong>1</strong><span>precomputed similarity matrix</span></div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">01 &mdash; THE PROBLEM</p></div>
+          <div class="case-body">
+            <p>Collaborative filtering is the usual answer to recommendation, and it is useless on day one — with no interaction history there is nothing to collaborate on. A content-based approach sidesteps that cold start entirely by recommending from what a film <em>is</em> rather than from who else happened to watch it.</p>
+            <p>The work then shifts into a data problem: building a representation of a film rich enough that similarity between two vectors actually means something.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">02 &mdash; ARCHITECTURE</p></div>
+          <div class="case-body">
+            <div class="diagram-wrap"><pre class="diagram">tmdb_5000_movies.csv  ┐
+                       ├─ merge on movie_id → genres + cast + crew
+tmdb_5000_credits.csv ┘                       + overview + keywords
+                                                      ↓
+                                           feature vectors
+                                                      ↓
+                                    cosine similarity matrix
+                                                      ↓
+                             similarity.pkl  →  Streamlit lookup</pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="build-log" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">03 &mdash; BUILD LOG</p>
+            <p class="case-side-note">The decisions that shaped the system, and why each one was made.</p>
+          </div>
+          <div class="case-body">
+            <ol class="log">
+              <li>
+                <h3>Two datasets, one movie</h3>
+                <p>TMDB splits metadata and credits across separate files. Merging them on <code>movie_id</code> produces a single record carrying title, genres, cast, crew, overview and keywords — cast and crew being the part that makes similarity feel intuitive to a human, since people follow directors and actors.</p>
+              </li>
+              <li>
+                <h3>A combined feature soup</h3>
+                <p>Genres, keywords, cast, crew and plot overview are folded into one text representation per film, then vectorised. The alternative — weighting each field separately — adds tuning parameters without clearly improving what a viewer would call a good recommendation.</p>
+              </li>
+              <li>
+                <h3>Cosine similarity over raw distance</h3>
+                <p>Cosine compares direction rather than magnitude, so a film with a long, detailed overview is not judged less similar simply for carrying more text.</p>
+              </li>
+              <li>
+                <h3>Precompute the matrix, ship the pickle</h3>
+                <p>The similarity matrix is computed once and serialised to <code>similarity.pkl</code>. At request time the app performs a lookup instead of a computation, which is what keeps it responsive on Streamlit Cloud's free tier.</p>
+              </li>
+              <li>
+                <h3>Deployed, not merely runnable</h3>
+                <p>Pushed to GitHub and deployed through Streamlit Community Cloud, so the project has a public URL rather than a set of local setup instructions.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="walkthrough" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">04 &mdash; WALKTHROUGH</p>
+            <p class="case-side-note">Running it end to end.</p>
+          </div>
+          <div class="case-body">
+            <ol class="walk">
+              <li>
+                <h3>Install</h3>
+                <pre class="code"><code>git clone https://github.com/pinkaofc/movie-recommendation-system.git
+cd movie-recommendation-system
+python -m venv venv
+venv\Scripts\activate         # Mac/Linux: source venv/bin/activate
+pip install -r requirements.txt</code></pre>
+              </li>
+              <li>
+                <h3>Run</h3>
+                <pre class="code"><code>streamlit run app.py</code></pre>
+              </li>
+              <li>
+                <h3>Use it</h3>
+                <p>Pick a film from the dropdown and the app returns the most similar titles straight from the precomputed matrix.</p>
+                <pre class="code"><code>http://localhost:8501</code></pre>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">05 &mdash; STACK</p></div>
+          <div class="case-body">
+            <div class="chips big"><span>Python</span><span>Pandas</span><span>NumPy</span><span>scikit-learn</span><span>Cosine similarity</span><span>Streamlit</span><span>pickle</span><span>TMDB dataset</span></div>
+            <a class="button primary case-repo-cta" href="https://github.com/pinkaofc/movie-recommendation-system" target="_blank" rel="noreferrer">Read the source on GitHub &#8599;</a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="case-pager container" aria-label="Project navigation">
+        <a class="pager-link prev" href="resume-screening-app.html"><span class="pager-dir">&#8592; Previous project</span><span class="pager-title">Resume Screening App</span></a>
+        <span></span>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> Priyanka Kumari.</span>
+      <span>AI / ML Engineer &middot; <a href="../index.html#work">Back to all work</a></span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

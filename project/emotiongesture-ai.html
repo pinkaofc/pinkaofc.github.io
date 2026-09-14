@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A real-time multi-modal vision suite running off a single webcam: eight hand gestures, finger counting from zero to ten across two hands, and seven-class emotion detection — all re">
+  <meta name="author" content="Priyanka Kumari">
+  <link rel="canonical" href="https://pinkaofc.github.io/project/emotiongesture-ai.html">
+  <meta property="og:title" content="EmotionGesture AI — Build log | Priyanka Kumari">
+  <meta property="og:description" content="A real-time multi-modal vision suite running off a single webcam: eight hand gestures, finger counting from zero to ten across two hands, and seven-class emotion detection — all re">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pinkaofc.github.io/project/emotiongesture-ai.html">
+  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka.jpg">
+  <meta name="twitter:card" content="summary">
+  <title>EmotionGesture AI — Build log | Priyanka Kumari</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../case.css">
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <a class="skip-link" href="#case-main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="../index.html#top" aria-label="Priyanka Kumari home"><span>P</span>riyanka.</a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+      <div class="nav-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/pinkaofc/EmotionGesture-AI" target="_blank" rel="noreferrer">Repo &#8599;</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="case-main">
+    <article>
+      <section class="case-hero container">
+        <a class="back-link" href="../index.html#work">&#8592; All work</a>
+        <p class="eyebrow">03 &middot; COMPUTER VISION · REAL-TIME · HCI</p>
+        <h1>EmotionGesture AI</h1>
+        <p class="case-codename">Repository codename &middot; <b>GestureSense AI</b></p>
+        <p class="case-lede">A real-time multi-modal vision suite running off a single webcam: eight hand gestures, finger counting from zero to ten across two hands, and seven-class emotion detection — all rendered live without the flicker that usually ruins these demos.</p>
+        <dl class="case-meta">
+          <div><dt>Role</dt><dd>Architecture + implementation</dd></div>
+          <div><dt>Core stack</dt><dd>OpenCV · MediaPipe · DeepFace</dd></div>
+          <div><dt>Interface</dt><dd>Streamlit dashboard + OpenCV overlay</dd></div>
+          <div><dt>Testing</dt><dd>pytest suite</dd></div>
+        </dl>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/pinkaofc/EmotionGesture-AI" target="_blank" rel="noreferrer">View repository &#8599;</a>
+          <a class="button secondary" href="#walkthrough">Jump to walkthrough &#8595;</a>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="case-stats reveal">
+          <div><strong>8</strong><span>gesture classes</span></div>
+          <div><strong>7</strong><span>emotion classes</span></div>
+          <div><strong>0–10</strong><span>finger counting range</span></div>
+          <div><strong>2</strong><span>hands tracked at once</span></div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">01 &mdash; THE PROBLEM</p></div>
+          <div class="case-body">
+            <p>Real-time computer vision demos usually fail in the same two places, and neither one is about model accuracy.</p>
+            <p>First, <strong>flicker</strong>. Classifying each frame independently means a single bad frame flips the label, so the output jitters between answers even when the user's hand is perfectly still.</p>
+            <p>Second, <strong>stalling</strong>. Emotion models are far slower than hand tracking. Running everything in one loop means the whole pipeline runs at the speed of its slowest component, and the frame rate collapses.</p>
+            <p>The interesting work here was structural rather than a question of model selection — getting several components of very different speeds to share one camera feed and still feel instant.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">02 &mdash; ARCHITECTURE</p></div>
+          <div class="case-body">
+            <div class="diagram-wrap"><pre class="diagram">                       ┌─────────────────────┐
+  Webcam ──▶ VideoStream │  (background thread)  │
+                       └─────────┬──────────┘
+                                 │ latest frame
+                       ┌─────────▼──────────┐
+                       │  GestureSensePipeline │
+                       └─────────┬──────────┘
+    ┌─────────┬─────────┼─────────┬─────────┐
+    ▼         ▼         ▼         ▼         ▼
+  Hand      Finger    Gesture    Emotion     FPS
+  tracking  count     engine     worker      meter
+  1€ filter geometry  stabiliser threaded    sliding
+    └─────────┴─────────┴─────────┴─────────┘
+                       │ FrameResult (typed)
+              Overlay / Streamlit dashboard</pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="build-log" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">03 &mdash; BUILD LOG</p>
+            <p class="case-side-note">The decisions that shaped the system, and why each one was made.</p>
+          </div>
+          <div class="case-body">
+            <ol class="log">
+              <li>
+                <h3>Capture moved to its own thread</h3>
+                <p><code>VideoStream</code> reads the camera on a background thread and the pipeline always pulls the most recent frame. Processing can never block capture, and a slow frame is dropped rather than queued into steadily growing latency.</p>
+              </li>
+              <li>
+                <h3>A temporal stabiliser to kill flicker</h3>
+                <p>Gesture classification is smoothed across frames before it is displayed, so a single misread frame cannot flip the visible label. This is the difference between a demo that looks broken and one that looks solid.</p>
+              </li>
+              <li>
+                <h3>A 1€ filter per hand</h3>
+                <p>Landmark coordinates are smoothed with a per-hand 1€ filter, chosen specifically because it suppresses jitter while a hand is still without adding perceptible lag when it moves quickly — the failure mode of a simple moving average.</p>
+              </li>
+              <li>
+                <h3>Emotion detection on its own worker</h3>
+                <p>The slowest component runs threaded and off the critical path, so hand tracking keeps its frame rate regardless. DeepFace is the default backend; FER is supported behind an <code>--emotion fer</code> flag but left opt-in, since its PyPI packaging pins a broken <code>ffmpeg==1.4</code>.</p>
+              </li>
+              <li>
+                <h3>One typed result object</h3>
+                <p>Every component writes into a single typed <code>FrameResult</code>, which the OpenCV overlay and the Streamlit dashboard both consume. Adding a new output surface means reading one struct, not rewiring the pipeline.</p>
+              </li>
+              <li>
+                <h3>Built like a product, not a notebook</h3>
+                <p>SOLID module boundaries, typed configuration, structured logging and a pytest suite — plus a documented upgrade path from the current rule-based gesture engine to a trained YOLOv8 model, so the rules are a deliberate starting point rather than a ceiling.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="walkthrough" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">04 &mdash; WALKTHROUGH</p>
+            <p class="case-side-note">Running it end to end.</p>
+          </div>
+          <div class="case-body">
+            <ol class="walk">
+              <li>
+                <h3>Install</h3>
+                <pre class="code"><code>pip install -r requirements.txt</code></pre>
+              </li>
+              <li>
+                <h3>Run the dashboard</h3>
+                <p>The Streamlit control panel shows FPS, current gesture, finger count, emotion and confidence breakdown, with live camera, hand and face status indicators. Camera selection and backend switching live in the sidebar.</p>
+                <pre class="code"><code>streamlit run app.py</code></pre>
+              </li>
+              <li>
+                <h3>Or run the annotated preview</h3>
+                <p>The OpenCV window draws landmarks, bounding boxes and labels straight onto the video feed.</p>
+                <pre class="code"><code>python main.py</code></pre>
+              </li>
+              <li>
+                <h3>Switch the emotion backend</h3>
+                <p>Optional — requires installing <code>fer</code> manually first.</p>
+                <pre class="code"><code>python main.py --emotion fer</code></pre>
+              </li>
+              <li>
+                <h3>Run the tests</h3>
+                <pre class="code"><code>pytest</code></pre>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">05 &mdash; STACK</p></div>
+          <div class="case-body">
+            <div class="chips big"><span>Python</span><span>OpenCV</span><span>MediaPipe</span><span>DeepFace</span><span>FER</span><span>Streamlit</span><span>NumPy</span><span>pytest</span><span>1€ filter</span><span>Threading</span></div>
+            <a class="button primary case-repo-cta" href="https://github.com/pinkaofc/EmotionGesture-AI" target="_blank" rel="noreferrer">Read the source on GitHub &#8599;</a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="case-pager container" aria-label="Project navigation">
+        <a class="pager-link prev" href="ticket-booking-system.html"><span class="pager-dir">&#8592; Previous project</span><span class="pager-title">Ticket Booking System</span></a>
+        <a class="pager-link next" href="grammar-spell-checker.html"><span class="pager-dir">Next project &#8594;</span><span class="pager-title">Grammar &amp; Spell Checker</span></a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> Priyanka Kumari.</span>
+      <span>AI / ML Engineer &middot; <a href="../index.html#work">Back to all work</a></span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

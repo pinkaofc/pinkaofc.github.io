@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An end-to-end resume classifier — trained to 98% test accuracy in a notebook, then shipped as a Streamlit app that reads PDFs and returns a job category instantly.">
+  <meta name="author" content="Priyanka Kumari">
+  <link rel="canonical" href="https://pinkaofc.github.io/project/resume-screening-app.html">
+  <meta property="og:title" content="Resume Screening App — Build log | Priyanka Kumari">
+  <meta property="og:description" content="An end-to-end resume classifier — trained to 98% test accuracy in a notebook, then shipped as a Streamlit app that reads PDFs and returns a job category instantly.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pinkaofc.github.io/project/resume-screening-app.html">
+  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka.jpg">
+  <meta name="twitter:card" content="summary">
+  <title>Resume Screening App — Build log | Priyanka Kumari</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../case.css">
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <a class="skip-link" href="#case-main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="../index.html#top" aria-label="Priyanka Kumari home"><span>P</span>riyanka.</a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+      <div class="nav-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/pinkaofc/Resume-Screening-App" target="_blank" rel="noreferrer">Repo &#8599;</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="case-main">
+    <article>
+      <section class="case-hero container">
+        <a class="back-link" href="../index.html#work">&#8592; All work</a>
+        <p class="eyebrow">05 &middot; MACHINE LEARNING · NLP</p>
+        <h1>Resume Screening App</h1>
+        <p class="case-codename">Repository codename &middot; <b>Automated Resume Classifier</b></p>
+        <p class="case-lede">An end-to-end resume classifier — trained to 98% test accuracy in a notebook, then shipped as a Streamlit app that reads PDFs and returns a job category instantly.</p>
+        <dl class="case-meta">
+          <div><dt>Role</dt><dd>End-to-end ML workflow</dd></div>
+          <div><dt>Modelling</dt><dd>Jupyter · scikit-learn</dd></div>
+          <div><dt>Features</dt><dd>TF-IDF over cleaned text</dd></div>
+          <div><dt>Interface</dt><dd>Streamlit</dd></div>
+        </dl>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/pinkaofc/Resume-Screening-App" target="_blank" rel="noreferrer">View repository &#8599;</a>
+          <a class="button secondary" href="#walkthrough">Jump to walkthrough &#8595;</a>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="case-stats reveal">
+          <div><strong>98%</strong><span>test accuracy</span></div>
+          <div><strong>2</strong><span>upload formats</span></div>
+          <div><strong>7</strong><span>workflow stages</span></div>
+          <div><strong>2</strong><span>pickled artefacts shipped</span></div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">01 &mdash; THE PROBLEM</p></div>
+          <div class="case-body">
+            <p>Recruiters lose hours to the first pass over a résumé pile — not evaluating candidates, just sorting them into the right stack. It is repetitive, it is mechanical, and it is exactly the shape of problem a classifier handles well.</p>
+            <p>The goal was to carry one model the whole distance: from a raw uploaded file through to a prediction in a browser, with nothing left stranded in a notebook.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">02 &mdash; ARCHITECTURE</p></div>
+          <div class="case-body">
+            <div class="diagram-wrap"><pre class="diagram">PDF / TXT upload → clean (URLs, emails, symbols, whitespace)
+   → NLTK tokenise + stopword removal
+   → TF-IDF vectorise   (tfidf.pkl)
+   → classifier          (clf.pkl)
+   → predicted job category</pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="build-log" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">03 &mdash; BUILD LOG</p>
+            <p class="case-side-note">The decisions that shaped the system, and why each one was made.</p>
+          </div>
+          <div class="case-body">
+            <ol class="log">
+              <li>
+                <h3>Cleaning before anything clever</h3>
+                <p>Raw résumé text is full of URLs, email addresses, stray symbols and inconsistent whitespace — all of which become noise features that a vectoriser will happily learn from. Stripping them first did more for accuracy than any later tuning.</p>
+              </li>
+              <li>
+                <h3>NLTK for tokenisation and stopwords</h3>
+                <p>Standard preprocessing, applied identically in both training and inference — which is precisely where this kind of pipeline usually breaks.</p>
+              </li>
+              <li>
+                <h3>TF-IDF rather than embeddings</h3>
+                <p>Résumé categories are driven by distinctive vocabulary: specific frameworks, tools and job titles. TF-IDF captures exactly that signal, trains in seconds and stays interpretable. Reaching for transformer embeddings here would have added weight without adding information.</p>
+              </li>
+              <li>
+                <h3>Trained in a notebook, evaluated properly</h3>
+                <p>Model development happened in Jupyter, reaching 98% accuracy on held-out test data across categories including Data Science, Java Developer, HR, Python Developer and Mechanical Engineer.</p>
+              </li>
+              <li>
+                <h3>Vectoriser pickled alongside the model</h3>
+                <p><code>tfidf.pkl</code> ships with <code>clf.pkl</code>. Serialising the model alone is a classic mistake — inference has to vectorise new text into the exact same feature space, so the fitted vectoriser is part of the artefact, not a detail to rebuild at runtime.</p>
+              </li>
+              <li>
+                <h3>Parsing at the edge</h3>
+                <p>PyPDF2 and python-docx pull text out of uploads, so a recruiter can drop in the file they already have rather than pasting plain text.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="walkthrough" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">04 &mdash; WALKTHROUGH</p>
+            <p class="case-side-note">Running it end to end.</p>
+          </div>
+          <div class="case-body">
+            <ol class="walk">
+              <li>
+                <h3>Install</h3>
+                <pre class="code"><code>git clone https://github.com/pinkaofc/Resume-Screening-App.git
+cd Resume-Screening-App
+pip install -r requirements.txt</code></pre>
+              </li>
+              <li>
+                <h3>Run the app</h3>
+                <pre class="code"><code>streamlit run app.py</code></pre>
+              </li>
+              <li>
+                <h3>Use it</h3>
+                <p>Upload a résumé as PDF or TXT and the predicted job category comes back immediately — cleaning, vectorising and classification all run behind that single upload.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">05 &mdash; STACK</p></div>
+          <div class="case-body">
+            <div class="chips big"><span>Python</span><span>scikit-learn</span><span>TF-IDF</span><span>NLTK</span><span>Streamlit</span><span>PyPDF2</span><span>python-docx</span><span>Jupyter</span><span>pickle</span></div>
+            <a class="button primary case-repo-cta" href="https://github.com/pinkaofc/Resume-Screening-App" target="_blank" rel="noreferrer">Read the source on GitHub &#8599;</a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="case-pager container" aria-label="Project navigation">
+        <a class="pager-link prev" href="grammar-spell-checker.html"><span class="pager-dir">&#8592; Previous project</span><span class="pager-title">Grammar &amp; Spell Checker</span></a>
+        <a class="pager-link next" href="movie-recommendation-system.html"><span class="pager-dir">Next project &#8594;</span><span class="pager-title">Movie Recommendation System</span></a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> Priyanka Kumari.</span>
+      <span>AI / ML Engineer &middot; <a href="../index.html#work">Back to all work</a></span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An agentic research platform that takes any topic and returns a fully-cited report — gathering evidence from 13 verified sources, cross-checking claims against each other, scoring ">
+  <meta name="author" content="Priyanka Kumari">
+  <link rel="canonical" href="https://pinkaofc.github.io/project/ai-research-agent.html">
+  <meta property="og:title" content="AI Research Agent — Build log | Priyanka Kumari">
+  <meta property="og:description" content="An agentic research platform that takes any topic and returns a fully-cited report — gathering evidence from 13 verified sources, cross-checking claims against each other, scoring ">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pinkaofc.github.io/project/ai-research-agent.html">
+  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka.jpg">
+  <meta name="twitter:card" content="summary">
+  <title>AI Research Agent — Build log | Priyanka Kumari</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../case.css">
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <a class="skip-link" href="#case-main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="../index.html#top" aria-label="Priyanka Kumari home"><span>P</span>riyanka.</a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+      <div class="nav-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/pinkaofc/AI-Research-Agent-" target="_blank" rel="noreferrer">Repo &#8599;</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="case-main">
+    <article>
+      <section class="case-hero container">
+        <a class="back-link" href="../index.html#work">&#8592; All work</a>
+        <p class="eyebrow">01 &middot; GENAI · AGENTS · RESEARCH</p>
+        <h1>AI Research Agent</h1>
+        <p class="case-codename">Repository codename &middot; <b>ResearchGPT</b></p>
+        <p class="case-lede">An agentic research platform that takes any topic and returns a fully-cited report — gathering evidence from 13 verified sources, cross-checking claims against each other, scoring confidence, and voicing the result as a two-host podcast.</p>
+        <dl class="case-meta">
+          <div><dt>Role</dt><dd>Architecture + full-stack build</dd></div>
+          <div><dt>Core stack</dt><dd>FastAPI · LangGraph · ChromaDB</dd></div>
+          <div><dt>Frontend</dt><dd>Next.js 14 · TypeScript</dd></div>
+          <div><dt>Surface</dt><dd>REST API + web app</dd></div>
+        </dl>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/pinkaofc/AI-Research-Agent-" target="_blank" rel="noreferrer">View repository &#8599;</a>
+          <a class="button secondary" href="#walkthrough">Jump to walkthrough &#8595;</a>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="case-stats reveal">
+          <div><strong>13</strong><span>research sources</span></div>
+          <div><strong>4</strong><span>LLM providers with failover</span></div>
+          <div><strong>4</strong><span>report formats</span></div>
+          <div><strong>8</strong><span>agent pipeline stages</span></div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">01 &mdash; THE PROBLEM</p></div>
+          <div class="case-body">
+            <p>Most research tools sit at one of two extremes. Chatbots write fluent summaries but invent citations. Search engines return links and leave the synthesis to you. Neither one verifies anything.</p>
+            <p>I wanted a system where every paragraph traces back to a real source, and where disagreement <em>between</em> sources is surfaced rather than quietly averaged away. That constraint — traceability first — drove almost every architectural decision below.</p>
+            <p>The result is deliberately not a chatbot. It is an agentic pipeline with discrete, inspectable stages.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">02 &mdash; ARCHITECTURE</p></div>
+          <div class="case-body">
+            <div class="diagram-wrap"><pre class="diagram">Planner → Research → Retriever → Fact Checker → Writer → Visualization → Podcast → Report</pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="build-log" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">03 &mdash; BUILD LOG</p>
+            <p class="case-side-note">The decisions that shaped the system, and why each one was made.</p>
+          </div>
+          <div class="case-body">
+            <ol class="log">
+              <li>
+                <h3>Thirteen sources behind one interface</h3>
+                <p>Wikipedia, SerpAPI, Tavily, arXiv, Semantic Scholar, CrossRef, GitHub, HuggingFace, Kaggle, GNews, NewsAPI, PubMed and OpenAlex each live behind a single <code>SourceAdapter</code> contract. Adding a fourteenth is one new file plus one line in the registry — no changes to the agents that consume them.</p>
+              </li>
+              <li>
+                <h3>Provider failover instead of a single LLM</h3>
+                <p>Gemini → OpenRouter → Groq → Ollama, with automatic failover down the chain. Swapping the model that powers any stage is pure configuration, so a rate limit or an outage degrades the run instead of ending it.</p>
+              </li>
+              <li>
+                <h3>Hybrid retrieval, not vectors alone</h3>
+                <p>Pure vector search misses exact terms; pure keyword search misses paraphrase. The retriever runs both — ChromaDB with sentence-transformer embeddings alongside BM25 — and merges them with reciprocal rank fusion. Chunking is sentence-aware, so citations never land mid-sentence.</p>
+              </li>
+              <li>
+                <h3>Fact checking as its own pipeline stage</h3>
+                <p>Verification is a stage, not a prompt suffix. Claims are cross-checked across sources, conflicts are detected and resolved to a &ldquo;likely correct&rdquo; reading, and both per-claim and overall confidence scores travel with the finished report.</p>
+              </li>
+              <li>
+                <h3>Charts built from data, never from the model</h3>
+                <p>Publication trends, GitHub stars and model-download figures are computed deterministically from the raw API responses. The LLM is trusted only with the knowledge graph and the Mermaid mind map — the places where being generative is actually the point.</p>
+              </li>
+              <li>
+                <h3>Production hygiene from the start</h3>
+                <p>Structured logging that records latency and token usage per stage, Redis caching that degrades gracefully when Redis is absent, exponential-backoff retries, JWT auth, Celery workers and Docker Compose. The test suite mocks every external API, so <code>pytest</code> runs with no network and no keys.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="walkthrough" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">04 &mdash; WALKTHROUGH</p>
+            <p class="case-side-note">Running it end to end.</p>
+          </div>
+          <div class="case-body">
+            <ol class="walk">
+              <li>
+                <h3>Configure</h3>
+                <p>Copy the example env file and add keys. Wikipedia, arXiv, CrossRef, OpenAlex, PubMed, Semantic Scholar, GitHub and HuggingFace all work with no key at all — a single LLM key is enough for a working system.</p>
+                <pre class="code"><code>cp .env.example .env</code></pre>
+              </li>
+              <li>
+                <h3>Run the backend</h3>
+                <p>SQLite is the default database, so there is no setup step. Redis is optional in development; without it the cache simply no-ops, and jobs run in-process unless <code>USE_CELERY=true</code>.</p>
+                <pre class="code"><code>cd backend
+python -m venv .venv &amp;&amp; .venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload      # http://localhost:8000/docs</code></pre>
+              </li>
+              <li>
+                <h3>Run the frontend</h3>
+                <pre class="code"><code>cd frontend
+npm install
+npm run dev                        # http://localhost:3000</code></pre>
+              </li>
+              <li>
+                <h3>Or skip both with Docker</h3>
+                <pre class="code"><code>docker compose up --build</code></pre>
+              </li>
+              <li>
+                <h3>Start a research job</h3>
+                <p>The API returns a <code>job_id</code> immediately. Polling that job shows progress moving through each agent stage, so a long run stays observable instead of becoming a spinner.</p>
+                <pre class="code"><code>POST /api/v1/research
+{"topic": "Quantum Computing in Healthcare",
+ "depth": "standard",
+ "language": "en"}</code></pre>
+              </li>
+              <li>
+                <h3>Collect the output</h3>
+                <p>Download the cited report as Markdown, HTML, PDF or DOCX — or stream the generated podcast.</p>
+                <pre class="code"><code>GET /api/v1/research/{job_id}
+GET /api/v1/research/{job_id}/report?format=pdf</code></pre>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">05 &mdash; STACK</p></div>
+          <div class="case-body">
+            <div class="chips big"><span>Python</span><span>FastAPI</span><span>LangGraph</span><span>ChromaDB</span><span>RAG</span><span>BM25</span><span>Celery</span><span>Redis</span><span>JWT</span><span>Docker</span><span>Next.js 14</span><span>TypeScript</span><span>Chart.js</span><span>React Flow</span><span>pytest</span></div>
+            <a class="button primary case-repo-cta" href="https://github.com/pinkaofc/AI-Research-Agent-" target="_blank" rel="noreferrer">Read the source on GitHub &#8599;</a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="case-pager container" aria-label="Project navigation">
+        <span></span>
+        <a class="pager-link next" href="ticket-booking-system.html"><span class="pager-dir">Next project &#8594;</span><span class="pager-title">Ticket Booking System</span></a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> Priyanka Kumari.</span>
+      <span>AI / ML Engineer &middot; <a href="../index.html#work">Back to all work</a></span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

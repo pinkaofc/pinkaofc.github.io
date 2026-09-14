@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pinkaofc.github.io/sitemap.xml

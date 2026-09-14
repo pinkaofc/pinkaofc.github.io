@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Flask application that repairs grammar and spelling using transformer models, containerised so the model environment behaves identically on every machine it lands on.">
+  <meta name="author" content="Priyanka Kumari">
+  <link rel="canonical" href="https://pinkaofc.github.io/project/grammar-spell-checker.html">
+  <meta property="og:title" content="Grammar &amp; Spell Checker — Build log | Priyanka Kumari">
+  <meta property="og:description" content="A Flask application that repairs grammar and spelling using transformer models, containerised so the model environment behaves identically on every machine it lands on.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pinkaofc.github.io/project/grammar-spell-checker.html">
+  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka.jpg">
+  <meta name="twitter:card" content="summary">
+  <title>Grammar &amp; Spell Checker — Build log | Priyanka Kumari</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../case.css">
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <a class="skip-link" href="#case-main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="../index.html#top" aria-label="Priyanka Kumari home"><span>P</span>riyanka.</a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+      <div class="nav-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="https://github.com/pinkaofc/Grammar-Spell-Checker-NLP-App" target="_blank" rel="noreferrer">Repo &#8599;</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="case-main">
+    <article>
+      <section class="case-hero container">
+        <a class="back-link" href="../index.html#work">&#8592; All work</a>
+        <p class="eyebrow">04 &middot; NLP · DEPLOYMENT</p>
+        <h1>Grammar &amp; Spell Checker</h1>
+        <p class="case-codename">Repository codename &middot; <b>NLP Correction App</b></p>
+        <p class="case-lede">A Flask application that repairs grammar and spelling using transformer models, containerised so the model environment behaves identically on every machine it lands on.</p>
+        <dl class="case-meta">
+          <div><dt>Role</dt><dd>Build + containerisation</dd></div>
+          <div><dt>Core stack</dt><dd>Flask · Transformers · Torch</dd></div>
+          <div><dt>Spelling</dt><dd>TextBlob</dd></div>
+          <div><dt>Deployment</dt><dd>Docker</dd></div>
+        </dl>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/pinkaofc/Grammar-Spell-Checker-NLP-App" target="_blank" rel="noreferrer">View repository &#8599;</a>
+          <a class="button secondary" href="#walkthrough">Jump to walkthrough &#8595;</a>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="case-stats reveal">
+          <div><strong>2</strong><span>correction layers</span></div>
+          <div><strong>1</strong><span>command to deploy</span></div>
+          <div><strong>3.10</strong><span>Python version pinned</span></div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">01 &mdash; THE PROBLEM</p></div>
+          <div class="case-body">
+            <p>Rule-based spell checkers fix typos but cannot see that a sentence is ungrammatical. Language models fix grammar but are heavy and fussy to install — and the usual outcome is a project that works on the machine it was written on and nowhere else.</p>
+            <p>This project pairs both approaches, then removes the environment problem entirely by shipping the whole thing as an image.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">02 &mdash; ARCHITECTURE</p></div>
+          <div class="case-body">
+            <div class="diagram-wrap"><pre class="diagram">Input text → TextBlob (spelling) → Transformer model (grammar) → Corrected output
+                                ↑
+                      Torch backend, inside Docker</pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="build-log" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">03 &mdash; BUILD LOG</p>
+            <p class="case-side-note">The decisions that shaped the system, and why each one was made.</p>
+          </div>
+          <div class="case-body">
+            <ol class="log">
+              <li>
+                <h3>Two layers, because they fail differently</h3>
+                <p>TextBlob handles spelling, where a dictionary is exactly the right tool. A Hugging Face transformer running on Torch handles grammar, where context is required. Each one covers the other's blind spot, instead of asking a single component to do everything.</p>
+              </li>
+              <li>
+                <h3>Docker as the actual feature</h3>
+                <p>A Dockerfile pins Python 3.10 and the full model environment, so <code>docker run</code> is the entire install procedure. For an NLP app with Torch in the dependency tree, reproducibility is not a nicety — it is the difference between a usable project and a README full of caveats.</p>
+              </li>
+              <li>
+                <h3>A swappable model</h3>
+                <p>The correction model sits behind <code>Model.py</code> rather than being inlined into the Flask routes, so it can be exchanged or fine-tuned for domain-specific grammar rules without touching the web layer.</p>
+              </li>
+              <li>
+                <h3>Honest about production</h3>
+                <p>Debug mode is enabled for development only, and the developer notes call for Gunicorn or uWSGI in front of the app before it faces real traffic — documented rather than silently shipped as-is.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="walkthrough" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">04 &mdash; WALKTHROUGH</p>
+            <p class="case-side-note">Running it end to end.</p>
+          </div>
+          <div class="case-body">
+            <ol class="walk">
+              <li>
+                <h3>Build the image</h3>
+                <pre class="code"><code>docker build -t grammar-spell-checker .</code></pre>
+              </li>
+              <li>
+                <h3>Run the container</h3>
+                <pre class="code"><code>docker run -p 5000:5000 grammar-spell-checker</code></pre>
+              </li>
+              <li>
+                <h3>Open it</h3>
+                <pre class="code"><code>http://localhost:5000</code></pre>
+              </li>
+              <li>
+                <h3>Try the sample</h3>
+                <p>A single sentence carrying four separate errors — verb agreement, a double negative, a countability mistake and tense.</p>
+                <pre class="code"><code>Input:
+  He dont has no idea how many informations
+  was missing from the report.
+
+Output:
+  He doesn't have any idea how much information
+  was missing from the report.</code></pre>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">05 &mdash; STACK</p></div>
+          <div class="case-body">
+            <div class="chips big"><span>Python 3.10</span><span>Flask</span><span>Hugging Face</span><span>Transformers</span><span>Torch</span><span>TextBlob</span><span>Docker</span></div>
+            <a class="button primary case-repo-cta" href="https://github.com/pinkaofc/Grammar-Spell-Checker-NLP-App" target="_blank" rel="noreferrer">Read the source on GitHub &#8599;</a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="case-pager container" aria-label="Project navigation">
+        <a class="pager-link prev" href="emotiongesture-ai.html"><span class="pager-dir">&#8592; Previous project</span><span class="pager-title">EmotionGesture AI</span></a>
+        <a class="pager-link next" href="resume-screening-app.html"><span class="pager-dir">Next project &#8594;</span><span class="pager-title">Resume Screening App</span></a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> Priyanka Kumari.</span>
+      <span>AI / ML Engineer &middot; <a href="../index.html#work">Back to all work</a></span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
