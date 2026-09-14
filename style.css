@@ -422,3 +422,5 @@ h1 em,h2 em{
   .timeline li{grid-template-columns:1fr;gap:14px;padding:26px 0}
   .tl-when{flex-direction:row;align-items:center;gap:12px}
 }
+.tl-type{font:500 11px var(--mono);letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-left:8px;vertical-align:middle}
+.tl-type-pill{font:600 10px var(--mono);letter-spacing:.12em;color:var(--dim);border:1px solid var(--line-2);border-radius:999px;padding:4px 10px;text-transform:uppercase}

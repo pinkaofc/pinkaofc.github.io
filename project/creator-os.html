@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A creator dashboard that takes a goal and returns a finished vertical video — collecting live signals, researching the topic against real sources, writing the script, rendering the">
+  <meta name="author" content="Priyanka Kumari">
+  <link rel="canonical" href="https://pinkaofc.github.io/project/creator-os.html">
+  <meta property="og:title" content="CreatorOS — Build log | Priyanka Kumari">
+  <meta property="og:description" content="A creator dashboard that takes a goal and returns a finished vertical video — collecting live signals, researching the topic against real sources, writing the script, rendering the">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pinkaofc.github.io/project/creator-os.html">
+  <meta property="og:image" content="https://pinkaofc.github.io/assets/priyanka-og.jpg">
+  <meta name="twitter:card" content="summary">
+  <title>CreatorOS — Build log | Priyanka Kumari</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0a0a0c">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../case.css">
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <a class="skip-link" href="#case-main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="../index.html#top" aria-label="Priyanka Kumari home"><span>P</span>riyanka.</a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+      <div class="nav-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#experience">Experience</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="../index.html#contact">Contact &#8599;</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="case-main">
+    <article>
+      <section class="case-hero container">
+        <a class="back-link" href="../index.html#work">&#8592; All work</a>
+        <p class="eyebrow">01 &middot; GENAI · VIDEO · OPEN-WEIGHTS</p>
+        <h1>CreatorOS</h1>
+        <p class="case-codename">Repository codename &middot; <b>Trend-First Creator Intelligence</b></p>
+        <p class="case-lede">A creator dashboard that takes a goal and returns a finished vertical video — collecting live signals, researching the topic against real sources, writing the script, rendering the frames, speaking the voiceover and synthesising the music. Every generative stage runs on open-weights models, and every stage tells you whether a model actually ran.</p>
+        <dl class="case-meta">
+          <div><dt>Role</dt><dd>Architecture + full build</dd></div>
+          <div><dt>Backend</dt><dd>FastAPI · SQLAlchemy · PostgreSQL</dd></div>
+          <div><dt>Frontend</dt><dd>React · Vite · TypeScript</dd></div>
+          <div><dt>Models</dt><dd>FLUX.1-schnell · Kokoro-82M · Whisper</dd></div>
+        </dl>
+        <div class="hero-actions">
+          <span class="dot-idle">&#9675; Source private</span>
+          <a class="button secondary" href="#walkthrough">Jump to walkthrough &#8595;</a>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="case-stats reveal">
+          <div><strong>6,310</strong><span>lines of Python API</span></div>
+          <div><strong>200</strong><span>screened concepts per keyword</span></div>
+          <div><strong>3</strong><span>voice providers, best-first</span></div>
+          <div><strong>1080×1920</strong><span>rendered MP4 output</span></div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">01 &mdash; THE PROBLEM</p></div>
+          <div class="case-body">
+            <p>Every AI video tool has the same two credibility problems, and both are about honesty rather than capability.</p>
+            <p><strong>It hides when the model didn't run.</strong> A generative pipeline with eight stages will have stages fail — no token, a rate limit, a malformed response. Most tools silently substitute a template and present the result as generated. The creator then publishes something they believe a model wrote.</p>
+            <p><strong>It cannot tell you what you are allowed to publish.</strong> Generate a video about the Mahabharata and you are retelling a public-domain epic — fine. Generate one that reproduces B. R. Chopra's adaptation, or draws a character &ldquo;in the style of&rdquo; a living artist, and you have a rights problem you will not discover until a strike arrives.</p>
+            <p>CreatorOS treats both as first-class engineering problems: provenance is surfaced per stage, and rights are screened before anything is generated.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">02 &mdash; ARCHITECTURE</p></div>
+          <div class="case-body">
+            <div class="diagram-wrap"><pre class="diagram">goal → trends → research → ideas → script → packaging → thumbnail → repurpose
+                                        │
+                                        ▼
+                     ┌────────── clip pipeline ──────────┐
+                     │  IP guard → character sheet       │
+                     │  FLUX.1-schnell    (frames)       │
+                     │  Kokoro-82M        (voice)        │
+                     │  numpy synth       (music bed)    │
+                     │  Pillow + libass   (elements)     │
+                     │  ffmpeg            (motion, mux)  │
+                     └───────────────────────────────────┘
+                                        ▼
+                          1080×1920 MP4 + .vtt + .srt
+                            + provenance record</pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="build-log" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">03 &mdash; BUILD LOG</p>
+            <p class="case-side-note">The decisions that shaped the system, and why each one was made.</p>
+          </div>
+          <div class="case-body">
+            <ol class="log">
+              <li>
+                <h3>Every stage says whether a model actually ran</h3>
+                <p>Each generative stage carries a badge reading <code>model</code>, <code>live</code> or <code>template</code>, and a banner reports how many stages fell back and why. The same detail travels in <code>plan.stages</code> on the API response. This is the decision the whole project is built around — a pipeline that silently substitutes a template is lying to the person who will publish the result.</p>
+              </li>
+              <li>
+                <h3>Provider-agnostic by two environment variables</h3>
+                <p><code>LLM_BASE_URL</code> and <code>LLM_MODEL</code> drive Ollama, vLLM, llama.cpp, TGI and LM Studio identically, with Hugging Face Inference Providers as the no-hardware path and <code>HF_FALLBACK_MODELS</code> behind it. The client remembers the first model that answers, so later calls skip the probing.</p>
+              </li>
+              <li>
+                <h3>A character sheet, because text-to-image has no memory</h3>
+                <p>Rendering a kids clip scene by scene returns six different creatures — the image model has no recollection of the previous call. Each script therefore carries a <code>character</code> field describing one original design, and the renderer prefixes it to every scene prompt. This is the single fix that makes a multi-scene character video coherent.</p>
+              </li>
+              <li>
+                <h3>The copyright guard separates two things usually conflated</h3>
+                <p>Public-domain <em>source material</em> is not the same as a modern adaptation of it. The guard allows <code>mahabharat</code> and names a specific public-domain translation to draw from, while blocking <code>br chopra</code> and <code>ramanand sagar</code>; commercial franchises are refused outright. Crucially it <em>rewrites</em> image prompts rather than flagging them — stripping &ldquo;in the style of&rdquo; clauses and replacing protected names, because an image model will otherwise draw exactly what it was asked for.</p>
+              </li>
+              <li>
+                <h3>The music is synthesised sample by sample, on purpose</h3>
+                <p>The bed is a four-chord loop with an arpeggio, a soft bass and a light backbeat, written into a WAV by numpy. No sample, no recording, no music model — chord progressions are not copyrightable and the arpeggio is generated from chord tones rather than written as a tune. That is what makes the audio unambiguously clear to publish, which a licensed music library cannot promise.</p>
+              </li>
+              <li>
+                <h3>Voice degrades through three providers instead of failing</h3>
+                <p>Kokoro-82M running locally first — 82M parameters, fits in CPU RAM, no token, no network, and roughly <strong>0.8× realtime on an 11th-gen i3</strong>, faster than the audio it produces. Then the same family via the Hugging Face router, then the OS speech engine, which is always present and clearly synthetic. Only if all three are unavailable is the clip silent.</p>
+              </li>
+              <li>
+                <h3>Subtitles are timed against measured speech, not declared duration</h3>
+                <p>Scenes are padded with silence to hit a target length. Timing cues against that padding stretches a four-word caption across twenty seconds. Each scene's audio duration is instead shared out in proportion to cue length — close enough to a single synthesised utterance to read naturally, with no forced aligner in the stack.</p>
+              </li>
+              <li>
+                <h3>One hundred concepts cheap, full scripts on demand</h3>
+                <p>A keyword produces up to 200 screened concepts across parallel batches, each batch working a different angle family so the library does not collapse into ten restatements of one idea. Near-duplicate titles are dropped. Opening a concept writes and caches the full script — so a 100-result search costs one cheap pass, not 100 full generations.</p>
+              </li>
+              <li>
+                <h3>Two URLs for the same video, because one cannot do both jobs</h3>
+                <p>Serving the player URL with <code>Content-Disposition: attachment</code> makes browsers refuse to render it inline, so playback and download are split. On the client the download fetches to a blob first: the <code>download</code> attribute is ignored for cross-origin URLs, and the API sits on a different port from the dev server, so a plain link would navigate away instead of saving. Range requests return <code>206</code>, so seeking works.</p>
+              </li>
+              <li>
+                <h3>Storage reconciles disk against database</h3>
+                <p>A failed render, a hand-deleted file or a reset database puts the filesystem and the <code>Clip</code> table out of step. <code>GET /v1/storage</code> reports both sides and names the disagreements — orphan files with no row, and rows whose video is gone. Cleanup <strong>defaults to a dry run</strong> and only deletes when called with <code>?delete=true</code>.</p>
+              </li>
+              <li>
+                <h3>Model output is a contract, not a suggestion</h3>
+                <p>The system prompt forbids inventing statistics, studies, dates, names and quotes, and requires factual claims to be phrased so the creator can verify them. Research passes live headlines as evidence of what is being <em>discussed</em>, never as established fact, and returns a fact checklist alongside a risk list. Responses are validated against Pydantic contracts before reaching the UI, so a malformed response degrades to the template instead of rendering garbage.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="walkthrough" class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side">
+            <p class="eyebrow">04 &mdash; WALKTHROUGH</p>
+            <p class="case-side-note">Running it end to end.</p>
+          </div>
+          <div class="case-body">
+            <div class="case-live">
+              <span class="dot-idle">&#9675; Not deployed</span>
+              <span>Runs locally today &mdash; the render pipeline needs ffmpeg, disk for the clip library and either a local model or an <code>HF_TOKEN</code>. Steps below.</span>
+            </div>
+            <ol class="walk">
+              <li>
+                <h3>Start the frontend</h3>
+                <pre class="code"><code>npm install
+npm run dev            # http://localhost:5173</code></pre>
+              </li>
+              <li>
+                <h3>Start the API</h3>
+                <pre class="code"><code>cd apps/api
+python -m pip install -r requirements.txt
+python -m uvicorn app.main:app --reload --port 8000</code></pre>
+              </li>
+              <li>
+                <h3>Point it at a model</h3>
+                <p>Pick either path. Setting the two local variables takes priority over the Hugging Face router. On a low-RAM machine prefer a 3B model — a 7B needs roughly 5&nbsp;GB free.</p>
+                <pre class="code"><code># Path A — no local hardware
+HF_TOKEN=hf_...
+HF_MODEL=Qwen/Qwen2.5-72B-Instruct
+
+# Path B — any OpenAI-compatible runtime
+LLM_BASE_URL=http://localhost:11434/v1
+LLM_MODEL=llama3.2:3b</code></pre>
+              </li>
+              <li>
+                <h3>Install the local voice (optional)</h3>
+                <p>~338&nbsp;MB, downloaded once and then used entirely offline. <code>apps/api/models/</code> is gitignored.</p>
+                <pre class="code"><code>python -m pip install kokoro-onnx soundfile
+# place kokoro-v1.0.onnx and voices-v1.0.bin in apps/api/models/kokoro</code></pre>
+              </li>
+              <li>
+                <h3>Check what is actually live</h3>
+                <p>The header badge shows the active model and its round-trip latency, and turns amber when nothing is reachable.</p>
+                <pre class="code"><code>GET /v1/providers/llm/health
+GET /v1/providers/voice</code></pre>
+              </li>
+              <li>
+                <h3>Run the whole thing</h3>
+                <p>Or stream it as SSE, one frame per stage, to watch the pipeline advance.</p>
+                <pre class="code"><code>POST /v1/workflows/creator-plan
+POST /v1/workflows/creator-plan/stream</code></pre>
+              </li>
+              <li>
+                <h3>Or go straight to video</h3>
+                <p>A keyword becomes a screened concept library; opening one writes the script; generating renders a real 1080&times;1920 MP4 with progress reported per stage.</p>
+                <pre class="code"><code>POST /v1/scripts/library          # keyword → concepts
+POST /v1/scripts/concepts/{id}/expand
+POST /v1/clips/generate           # 202, then poll
+GET  /v1/clips/{id}</code></pre>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="container case-section reveal">
+        <div class="case-grid">
+          <div class="case-side"><p class="eyebrow">05 &mdash; STACK</p></div>
+          <div class="case-body">
+            <div class="chips big"><span>Python</span><span>FastAPI</span><span>SQLAlchemy</span><span>PostgreSQL</span><span>Redis</span><span>Pydantic</span><span>React</span><span>Vite</span><span>TypeScript</span><span>FLUX.1-schnell</span><span>Kokoro-82M</span><span>Whisper</span><span>ffmpeg</span><span>Pillow</span><span>NumPy</span><span>Docker</span></div>
+            <p class="case-side-note" style="margin-top:18px">The source for this project is not public. <a href="../index.html#contact" style="color:var(--accent)">Get in touch</a> to discuss it.</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="case-pager container" aria-label="Project navigation">
+        <span></span>
+        <a class="pager-link next" href="ai-research-agent.html"><span class="pager-dir">Next project &#8594;</span><span class="pager-title">AI Research Agent</span></a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> Priyanka Kumari.</span>
+      <span>AI / ML Engineer &middot; <a href="../index.html#work">Back to all work</a></span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
