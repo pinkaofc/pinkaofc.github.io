@@ -410,3 +410,16 @@ h1 em,h2 em{
 }
 .tl-type{font:500 11px var(--mono);letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-left:8px;vertical-align:middle}
 .tl-type-pill{font:600 10px var(--mono);letter-spacing:.12em;color:var(--dim);border:1px solid var(--line-2);border-radius:999px;padding:4px 10px;text-transform:uppercase}
+
+/* ═══ Portrait ═════════════════════════════════════════════════════════ */
+.portrait{margin:38px 0 0;max-width:260px}
+.portrait img{
+  display:block;width:100%;height:auto;border-radius:16px;
+  border:1px solid var(--line-2);
+  box-shadow:0 18px 44px rgba(0,0,0,.5);
+}
+.portrait figcaption{
+  font:500 11px var(--mono);color:var(--dim);margin-top:14px;
+  letter-spacing:.1em;text-transform:uppercase;
+}
+@media(max-width:850px){.portrait{max-width:200px;margin-top:28px}}
